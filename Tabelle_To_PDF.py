@@ -40,19 +40,19 @@ wb = load_workbook(filename = hauptdatei)
 
 ws = wb.active
 wb.title = "Entfernungen"
-sheet_ranges = wb['Rathen'] # fertig 11.6.23
-#sheet_ranges = wb['Schrammsteine']
-#sheet_ranges = wb['Schmilka']
-#sheet_ranges = wb['Affensteine'] #fertig
-#sheet_ranges = wb['Alle']
-#sheet_ranges = wb['Brandgebiet'] gibts nicht
-#sheet_ranges = wb['Zschand'] Fertig 11.6.23
+GEBIET_AUSWAHL="Rathen"  # fertig 11.6.23
+#GEBIET_AUSWAHL = 'Schrammsteine'
+#GEBIET_AUSWAHL = 'Schmilka'
+#GEBIET_AUSWAHL = 'Affensteine' #fertig
+#GEBIET_AUSWAHL = 'Alle'
+#GEBIET_AUSWAHL = 'Brandgebiet' gibts nicht
+#GEBIET_AUSWAHL = 'Zschand' Fertig 11.6.23
 
-#sheet_ranges = wb['Bielatal'] #fertig
-#sheet_ranges = wb['Test']
-#sheet_ranges = wb['Gebiet der Steine'] ##gfertig
-
-
+#GEBIET_AUSWAHL = 'Bielatal' #fertig
+#GEBIET_AUSWAHL = wb['Test']
+GEBIET_AUSWAHL = 'Gebiet der Steine' ##fertig 11.6.23
+sheet_ranges = wb[GEBIET_AUSWAHL] # fertig 11.6.23
+Ausgabe_Name=GEBIET_AUSWAHL+".kml"
 
 #sheet_ranges = wb['Elbi']
 def extrahiere_grad(text):
@@ -304,7 +304,7 @@ def Anzahl_Benotungen(schwierigkeiten,benotungen,bewertungs_skala):
 
 
 
-def PLOT_Schwierigkeit_vs_Benotung(schwierigkeiten_org,benotung,gipfel,skala):
+def PLOT_Schwierigkeit_vs_Benotung(schwierigkeiten_org,benotung,ordner,gipfel,skala):
         
     anzahl,benotung,schwierigkeiten=Anzahl_Benotungen(schwierigkeiten_org,benotung,skala)
     
@@ -337,13 +337,15 @@ def PLOT_Schwierigkeit_vs_Benotung(schwierigkeiten_org,benotung,gipfel,skala):
     
     ax3.set_xlabel("Schwierigkeit")
     ax3.set_ylabel("Bewertung")
-    plt.savefig(gipfel+".png",dpi=150)
+    plt.savefig(ordner+gipfel+".png",dpi=150)
     return anzahl,benotung,schwierigkeiten
 
 
 
-def erstelle_KMZ(Gipfel_Array):
+def erstelle_KMZ(Gipfel_Array,Ausgabe_Name):
+     output=Ausgabe_Name[:-3]+"_Zusammen.kmz"    
      output="Zusammen.kmz"     
+ 
      zf = zipfile.ZipFile(output,'a')      
      for gipfel in Gipfel_Array:
          try:
@@ -367,7 +369,7 @@ def erstelle_KMZ(Gipfel_Array):
      zf.write("Icons/orange.png",arcname="files/orange.png") 
      zf.write("Icons/red.png",   arcname="files/red.png") 
      zf.write("Icons/blue.png",  arcname="files/blue.png") 
-     zf.write("AUSGABE.kml",arcname='AUSGABE.kml') ##Add revised doc.kml file 
+     zf.write(Ausgabe_Name,arcname=Ausgabe_Name) ##Add revised doc.kml file 
      
      zf.close() 
     
@@ -438,11 +440,11 @@ schwierigkeits_skala=["I","II","III","IV","V","VI","VIIa","VIIb","VIIc","VIIIa",
 
 
 
-i=42 #i=2 Standard
+i=2 #i=2 Standard
 Gipfel_Array=[]
-i_max=5000
+i_max=42000 #hohe zahl falls alle, kleine zahl bei Tests
 while sheet_ranges['A'+str(i)].value!=None and i<i_max:
-    print("--------------------------------------------------")
+    print("\n\n\n--------------------------------------------------")
     print("---------------------NEUER GIPFEL-----------------------------")
     print("--------------------------------------------------")
 
@@ -529,7 +531,7 @@ while sheet_ranges['A'+str(i)].value!=None and i<i_max:
     print("Noten",Noten)
     
     #Erstelle den ScatterPlot
-    anzahl,benotung,schwierigkeiten=PLOT_Schwierigkeit_vs_Benotung(Bewertung,Noten,"files/"+GIPFEL,schwierigkeits_skala)
+    anzahl,benotung,schwierigkeiten=PLOT_Schwierigkeit_vs_Benotung(Bewertung,Noten,"Scatterplot/",GIPFEL,schwierigkeits_skala)
     
     #lege Farbe fest für Icon
     farbe=bewertungs_kategorie(anzahl,benotung,schwierigkeiten)  
@@ -542,7 +544,7 @@ while sheet_ranges['A'+str(i)].value!=None and i<i_max:
     
         # PDF mit Infos schreiben
         styles = getSampleStyleSheet()
-        doc = SimpleDocTemplate("files/"+Gipfel_Dot_PDF, pagesize=A4,rightMargin=10,leftMargin=10, topMargin=30,bottomMargin=18)
+        doc = SimpleDocTemplate("PDF_Ausgabe/"+Gipfel_Dot_PDF, pagesize=A4,rightMargin=10,leftMargin=10, topMargin=30,bottomMargin=18)
         story = []
         Stil_Paragraph=styles['Normal']
         Stil_Paragraph.fontSize=15
@@ -571,7 +573,7 @@ while sheet_ranges['A'+str(i)].value!=None and i<i_max:
     
         
         story.append(PageBreak())
-        story.append(Image("files/"+GIPFEL+".png"    ,width=2.2*8*cm, height=2.2*6*cm))
+        story.append(Image("Scatterplot/"+GIPFEL+".png"    ,width=2.2*8*cm, height=2.2*6*cm))
         if os.path.exists("maps/"+GIPFEL+"_map.png"):          
             story.append(Image("maps/"+GIPFEL+"_map.png",width=2.2*8*cm, height=2.2*6*cm))
         else:
@@ -582,7 +584,7 @@ while sheet_ranges['A'+str(i)].value!=None and i<i_max:
         #for Weg_Zahler in range(2):
             #if True:
             try:
-                print("-------------------------------------")
+                #print("-------------------------------------")
                 #Gibt die Kommentare der Wege wieder
                 Kommentare_Wege=WEGE_KOMMENTARE(Weg_Nummer[Weg_Zahler])
                 print(Weg_Zahler,"Weg_Zahler",Weg_Namen[Weg_Zahler],"Weg:",Weg_Nummer[Weg_Zahler])
@@ -627,4 +629,4 @@ while sheet_ranges['A'+str(i)].value!=None and i<i_max:
 file_ausgabe.write("</Document></kml>")
 file_ausgabe.close()
 
-erstelle_KMZ(Gipfel_Array) 
+erstelle_KMZ(Gipfel_Array,Ausgabe_Name) 

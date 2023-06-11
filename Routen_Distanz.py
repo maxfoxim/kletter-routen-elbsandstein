@@ -21,15 +21,15 @@ wb = load_workbook(filename = hauptdatei)
 ws = wb.active
 wb.title = "Entfernungen"
 #sheets=["Gebiet der Steine"]
-sheets = ['Rathen'] 
-#sheets = ['Schrammsteine'] #fehlen
-#sheets = ['Zschand']# fehlen
-#ws = wb['Affensteine'] 
-#ws = wb['Alle']
-#ws = wb['Brandgebiet']
-#ws = wb['Bielatal'] 
-#ws = wb['Test']
-#ws = wb['Gebiet der Steine']
+#GEBIET_AUSWAHL = "Rathen"  # fertig 11.6.23
+#GEBIET_AUSWAHL = 'Schrammsteine' fehlen Parkplätze
+#GEBIET_AUSWAHL = 'Schmilka' fehlen Parkplätze
+#GEBIET_AUSWAHL = 'Affensteine' #fertig 7.6.21
+#GEBIET_AUSWAHL = 'Brandgebiet' gibts nicht als eigenen Reiter, fehlen Parkplätze
+#GEBIET_AUSWAHL = 'Zschand' Fertig 11.6.23
+#GEBIET_AUSWAHL = 'Bielatal' #fertig 16.5.21
+GEBIET_AUSWAHL = 'Gebiet der Steine' ##fertig 11.6.23
+sheets = [GEBIET_AUSWAHL] # fertig 11.6.23
 
 
 """
@@ -117,7 +117,7 @@ def HTML_TO_PNG(Gipfel):
 col=9
 row=2
 ROW_MAX=5000 # hohe zahl falls alle, kleine zahl bei Tests
-Wartezeit=1000 # Wartezeit da ein Limit bei der API besteht
+Wartezeit=0.01 # Wartezeit da ein Limit bei der API besteht
 routen_nicht_neu_berechnen=False
 
 for sheet in sheets:  
@@ -165,7 +165,7 @@ for sheet in sheets:
                         distanz_1, dauer_1,routen_GPS_koor_1=distanzen_berechnen(Start_1,Ende,"routen_json/"+GIPFEL+"_1.json")
                         distanz_2, dauer_2,routen_GPS_koor_2=distanzen_berechnen(Start_2,Ende,"routen_json/"+GIPFEL+"_2.json")
                         distanz_3, dauer_3,routen_GPS_koor_3=distanzen_berechnen(Start_3,Ende,"routen_json/"+GIPFEL+"_3.json")
-                        time.sleep(1)
+                        time.sleep(Wartezeit)
                                                                     
                         route_darstellen_als_html(GIPFEL,routen_GPS_koor_1,routen_GPS_koor_2,routen_GPS_koor_3,Start_1,Start_2,Start_3,Ende)
 
