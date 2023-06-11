@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+<name>Juliturm</name>
+	<atom:author><atom:name>Locus (Android)</atom:name></atom:author>
+	<Style id="icon_default.png">
+		<IconStyle>
+			<Icon><href>files/icon_default.png</href></Icon>
+			<hotSpot x="0.5" y="0.0" xunits="fraction" yunits="fraction" />
+		</IconStyle>
+	</Style>
+	
