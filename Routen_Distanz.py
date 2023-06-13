@@ -53,6 +53,7 @@ def suche_koordinaten(text):
 
 def distanzen_berechnen(Start,Ende,datei):
     coords=(Start,Ende)
+    
     client = openrouteservice.Client(key='HIER Schlüssel eintragen von OPEN ROUTE Service') # Specify your personal API key
     ausgabe = client.directions(coords,profile='foot-walking',geometry= 'true',format_out="geojson")
     #print(ausgabe)

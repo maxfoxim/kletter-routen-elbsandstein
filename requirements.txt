@@ -1,0 +1,10 @@
+reportlab
+pyplot 
+numpy 
+zipfile
+openpyxl 
+pandas
+selenium
+openrouteservice
+pillow
+json
